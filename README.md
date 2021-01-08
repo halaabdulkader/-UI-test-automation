@@ -1,1 +1,1 @@
-# -UI-test-automation
+# UI-test-automation
