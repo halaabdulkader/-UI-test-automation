@@ -15,10 +15,10 @@ class LoginLogoutTest(unittest.TestCase):
 
     def test_login_logout_valid(self):
         driver = self.driver
-        driver.get("http://elbtesting.idscan.cloud/idscanapp/#/login")
+        driver.get("URL")
         login = LoginPage(driver)
-        login.enter_username("superadministrator")
-        login.enter_password("Password1!")
+        login.enter_username("username")
+        login.enter_password("pass")
         login.click_login()
         dashboardpage = DashBoardPage(driver)
         dashboardpage.click_navigate()
