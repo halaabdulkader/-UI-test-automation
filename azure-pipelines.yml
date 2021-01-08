@@ -1,0 +1,54 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: 'windows-latest'
+strategy:
+  matrix:
+
+    Python38:
+      python.version: '3.8'
+
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '$(python.version)'
+  displayName: 'Use Python $(python.version)'
+
+- script: |
+    python -m pip install --upgrade pip
+    pip install pytest selenium
+  displayName: 'Install dependencies'
+
+- script: python -m pip install seleniumbase
+  displayName: 'Verify install from PyPI'
+
+- script: |
+    seleniumbase
+    sbase
+  displayName: 'Check the console scripts interface'
+  
+
+- script: |
+      seleniumbase install chromedriver 86
+  displayName: 'Install chromedriver'
+
+- script: |
+    pip install pytest
+    pip install pytest-cov
+    python -m pytest IEOS/POMProject/Tests/login.py --doctest-modules --junitxml=junit/test-results.xml --cov=. --cov-report=xml --cov-report=html
+    python -m pytest IEOS/POMProject/Tests/sanityCheck.py --doctest-modules --junitxml=junit/test-results.xml --cov=. --cov-report=xml --cov-report=html
+  displayName: 'Test with pytest'
+  
+- task: PublishTestResults@2
+  condition: succeededOrFailed()
+  inputs:
+    testResultsFiles: '**/test-*.xml'
+    testRunTitle: 'Publish test results for Python $(python.version)'
+
+
